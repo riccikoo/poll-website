@@ -5,17 +5,17 @@ const Choice = require("./choice.model");
 const Vote = require("./vote.model");
 
 // Relasi
-User.hasMany(Poll);
-Poll.belongsTo(User);
+User.hasMany(Poll, { foreignKey: 'UserId', onDelete: 'SET NULL' });
+Poll.belongsTo(User, { foreignKey: 'UserId' });
 
-Poll.hasMany(Choice, { onDelete: 'CASCADE' });
-Choice.belongsTo(Poll);
+Poll.hasMany(Choice, { foreignKey: 'PollId', onDelete: 'CASCADE' });
+Choice.belongsTo(Poll, { foreignKey: 'PollId' });
 
-Choice.hasMany(Vote, { onDelete: 'CASCADE' });
-Vote.belongsTo(Choice);
+Choice.hasMany(Vote, { foreignKey: 'ChoiceId', onDelete: 'CASCADE' });
+Vote.belongsTo(Choice, { foreignKey: 'ChoiceId' });
 
-User.hasMany(Vote, { onDelete: 'CASCADE' });
-Vote.belongsTo(User);
+User.hasMany(Vote, { foreignKey: 'UserId', onDelete: 'CASCADE' });
+Vote.belongsTo(User, { foreignKey: 'UserId' });
 
 module.exports = {
   sequelize,

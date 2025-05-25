@@ -22,6 +22,8 @@ exports.login = async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(401).json({ error: "Wrong password" });
 
+    console.log("User found:", user); // cek user object
+
     const token = jwt.sign(
       { id: user.id, username: user.username, role: user.role },
       process.env.JWT_SECRET,
@@ -30,6 +32,8 @@ exports.login = async (req, res) => {
 
     res.json({ message: "Login successful", token });
   } catch (err) {
+    console.error("Login failed:", err);
     res.status(500).json({ error: "Login failed" });
   }
 };
+
