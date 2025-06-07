@@ -37,3 +37,9 @@ coverage/
 # Local development files
 *.log
 .env.*
+
+DB_NAME=poll_website
+DB_USER=root
+DB_PASSWORD=
+DB_HOST=localhost
+JWT_SECRET=
