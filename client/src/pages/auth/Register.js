@@ -9,7 +9,7 @@ const Register = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -19,8 +19,8 @@ const Register = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+    if (!formData.username.trim()) {
+      newErrors.username = 'Username is required';
     }
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
@@ -60,7 +60,6 @@ const Register = () => {
       ...prev,
       [e.target.name]: e.target.value
     }));
-    // Clear error when user starts typing
     if (errors[e.target.name]) {
       setErrors(prev => ({
         ...prev,
@@ -89,23 +88,23 @@ const Register = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-300">
-                Full Name
+              <label htmlFor="username" className="block text-sm font-medium text-gray-300">
+                Username
               </label>
               <input
                 type="text"
-                id="name"
-                name="name"
-                value={formData.name}
+                id="username"
+                name="username"
+                value={formData.username}
                 onChange={handleChange}
                 required
                 className={`mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-purple-500 focus:ring-purple-500 ${
-                  errors.name ? 'border-red-500' : ''
+                  errors.username ? 'border-red-500' : ''
                 }`}
-                placeholder="Enter your full name"
+                placeholder="Enter your username"
               />
-              {errors.name && (
-                <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+              {errors.username && (
+                <p className="mt-1 text-sm text-red-500">{errors.username}</p>
               )}
             </div>
 
@@ -200,11 +199,7 @@ const Register = () => {
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-3">
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => {/* Handle Google signup */}}
-              >
+              <Button variant="outline" className="w-full" onClick={() => {}}>
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                   <path
                     fill="currentColor"
@@ -213,12 +208,7 @@ const Register = () => {
                 </svg>
                 Google
               </Button>
-
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => {/* Handle GitHub signup */}}
-              >
+              <Button variant="outline" className="w-full" onClick={() => {}}>
                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                   <path
                     fillRule="evenodd"
@@ -246,4 +236,4 @@ const Register = () => {
   );
 };
 
-export default Register; 
+export default Register;
