@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Button = ({ children, type = 'button', variant = 'primary', className = '', ...props }) => {
+const Button = ({ children, type = 'submit', variant = 'primary', className = '', ...props }) => {
   const baseStyles = 'px-6 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
   
   const variants = {
