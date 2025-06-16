@@ -3,7 +3,14 @@ const { Poll, User } = require("../models");
 exports.getAllPolls = async (req, res) => {
   try {
     const polls = await Poll.findAll({ include: User });
-    res.json(polls);
+    const now = new Date();
+    const pollsWithStatus = polls.map(poll => {
+      let status = 'active';
+      if (poll.endDate && new Date(poll.endDate) < now) status = 'ended';
+      // Jika ingin status lain, tambahkan di sini
+      return { ...poll.toJSON(), status };
+    });
+    res.json(pollsWithStatus);
   } catch (err) {
     console.error("Get all polls error:", err);
     res.status(500).json({ error: "Failed to get polls" });

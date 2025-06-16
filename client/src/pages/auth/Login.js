@@ -1,18 +1,35 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import Button from '../../components/auth/Button';
 import { useAuth } from '../../contexts/AuthContext';
+import api from '../../services/api';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, user, isAuthenticated } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Test API connection
+    api.get('/test')
+      .then(response => {
+        console.log('API connection test successful:', response.data);
+      })
+      .catch(error => {
+        console.error('API connection test failed:', error);
+        toast.error('Cannot connect to server. Please try again later.');
+      });
+  }, []);
+
+  if (isAuthenticated && user) {
+    return <Navigate to="/home" replace />;
+  }
 
   const handleChange = (e) => {
     setFormData({
@@ -24,11 +41,12 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+    console.log('Mengirim request login...');
     try {
       await login(formData.email, formData.password);
-      navigate('/');
+      navigate('/home');
     } catch (error) {
+      console.error('Login error:', error);
       toast.error(error.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);

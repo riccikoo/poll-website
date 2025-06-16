@@ -1,4 +1,4 @@
-const { Choice, Poll } = require("../models");
+const { Choice, Poll, Vote } = require("../models");
 
 exports.addChoice = async (req, res) => {
   try {
@@ -19,7 +19,10 @@ exports.addChoice = async (req, res) => {
 exports.getChoices = async (req, res) => {
   try {
     const { pollId } = req.params;
-    const choices = await Choice.findAll({ where: { PollId: pollId } });
+    const choices = await Choice.findAll({
+      where: { PollId: pollId },
+      include: [{ model: Vote }]
+    });
     res.json(choices);
   } catch (err) {
     console.error("Get choices error:", err);

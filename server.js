@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { sequelize } = require("./server/models");
+const sequelize = require('./server/config/db');
 require("dotenv").config();
 
 const PORT = process.env.PORT || 3001;
@@ -8,7 +8,7 @@ const app = express();
 
 // CORS configuration
 app.use(cors({
-  origin: 'http://localhost:3001',
+  origin: ['http://localhost:3000', 'http://localhost:3001'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -17,9 +17,14 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Test route
+app.get("/api/test", (req, res) => {
+  res.json({ message: "API is working!" });
+});
+
 app.get("/", (req, res) => res.send("Polling API Ready"));
 
-sequelize.sync({ alter: true })
+sequelize.sync()
   .then(() => {
     console.log("Database synced");
     app.listen(PORT, () => {
@@ -36,4 +41,5 @@ app.use("/api/user", require("./server/routes/user.routes"));
 app.use("/api/polls", require("./server/routes/poll.routes"));
 app.use("/api/polls", require("./server/routes/choice.routes"));
 app.use("/api/votes", require("./server/routes/vote.routes"));
+app.use("/api/analytics", require("./server/routes/analytics.routes"));
 

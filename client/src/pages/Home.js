@@ -4,10 +4,12 @@ import Button from "../components/Button";
 import Card, { CardTitle, CardContent } from "../components/Card";
 import PollCard from "../components/PollCard";
 import PollForm from "../components/PollForm";
+import { useAuth } from "../contexts/AuthContext";
 
 function Home() {
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState("polls");
   const [showPollForm, setShowPollForm] = useState(false);
+  const { user, isAuthenticated } = useAuth();
 
   const samplePolls = [
     {
@@ -56,25 +58,54 @@ function Home() {
     }
   ];
 
-  // Pindahkan renderContent() dan return-nya dari App.js ke sini
+  const renderHero = () => {
+    if (isAuthenticated && user) {
+      return (
+        <div className="text-center py-20">
+          <div className="flex flex-col items-center justify-center mb-4">
+            <img
+              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.username || user.email)}&background=6D28D9&color=fff&size=128`}
+              alt="avatar"
+              className="w-24 h-24 rounded-full shadow-lg border-4 border-purple-500 mb-2"
+            />
+            <span className="inline-block bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full mb-2 shadow">Logged In</span>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-extrabold mb-4 bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent drop-shadow-lg">
+            Welcome, {user.username || user.email}!
+          </h1>
+          <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
+            You are now logged in. Create, manage, and analyze your polls with advanced features and real-time analytics!
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" onClick={() => setActiveTab('create')} className="bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg">
+              Create New Poll
+            </Button>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="text-center py-20">
+          <h1 className="text-4xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+            Create Engaging Polls
+          </h1>
+          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            Design beautiful, interactive polls that drive engagement and gather valuable insights.
+          </p>
+          <Button size="lg" onClick={() => setActiveTab('create')}>
+            Try Now - Create New Poll
+          </Button>
+        </div>
+      );
+    }
+  };
+
   const renderContent = () => {
     switch (activeTab) {
-      case 'dashboard':
+      case 'polls':
         return (
           <>
-            {/* Hero Section */}
-            <div className="text-center py-20">
-              <h1 className="text-4xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-                Create Engaging Polls
-              </h1>
-              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-                Design beautiful, interactive polls that drive engagement and gather valuable insights.
-              </p>
-              <Button size="lg" onClick={() => setShowPollForm(true)}>
-                Create New Poll
-              </Button>
-            </div>
-
+            {renderHero()}
             {/* Features Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
               {[
@@ -119,22 +150,6 @@ function Home() {
               </div>
             </div>
           </>
-        );
-      case 'polls':
-        return (
-          <div className="py-8">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-3xl font-bold">All Polls</h2>
-              <Button variant="outline" onClick={() => setShowPollForm(true)}>
-                Create New Poll
-              </Button>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {samplePolls.map((poll) => (
-                <PollCard key={poll.id} poll={poll} />
-              ))}
-            </div>
-          </div>
         );
       case 'create':
         return (
@@ -199,7 +214,13 @@ function Home() {
           {renderContent()}
         </div>
       </main>
-      {/* footer sama seperti App.js */}
+      {showPollForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className="bg-gray-900 rounded-xl p-8 shadow-2xl w-full max-w-lg">
+            <PollForm onClose={() => setShowPollForm(false)} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

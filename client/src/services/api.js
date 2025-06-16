@@ -1,11 +1,14 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'http://localhost:3001/api',
+  withCredentials: true
 });
 
-// Interceptor untuk token auth
+// Request interceptor for logging
 api.interceptors.request.use((config) => {
+  console.log('Making request to:', config.url);
+  console.log('Request config:', config);
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -13,10 +16,17 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor for handling errors
+// Response interceptor for logging
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log('Response received:', response);
+    return response;
+  },
   async (error) => {
+    console.error('API Error:', error);
+    console.error('Error config:', error.config);
+    console.error('Error response:', error.response);
+    
     const originalRequest = error.config;
 
     // Handle token refresh
@@ -46,11 +56,14 @@ api.interceptors.response.use(
 
 // Auth Services
 export const authService = {
-  login: (email, password) => api.post('/auth/login', { email, password }).then(res => res.data),
+  login: (email, password) => {
+    console.log('Form submitted:', { email, password });
+    return api.post('/auth/login', { email, password }).then(res => res.data);
+  },
   register: (userData) => api.post('/auth/register', userData).then(res => res.data),
   logout: () => api.post('/auth/logout').then(res => res.data),
   refreshToken: (refreshToken) => api.post('/auth/refresh', { refreshToken }).then(res => res.data),
-  getProfile: () => api.get('/auth/profile').then(res => res.data),
+  getProfile: () => api.get('/user/me').then(res => res.data),
   forgotPassword: (email) => api.post('/auth/forgot-password', { email }).then(res => res.data),
   resetPassword: (token, password) => api.post('/auth/reset-password', { token, password }).then(res => res.data),
 };
@@ -62,7 +75,7 @@ export const pollService = {
   createPoll: (pollData) => api.post('/polls', pollData).then(res => res.data),
   updatePoll: (id, pollData) => api.put(`/polls/${id}`, pollData).then(res => res.data),
   deletePoll: (id) => api.delete(`/polls/${id}`).then(res => res.data),
-  vote: (pollId, choiceId) => api.post(`/polls/${pollId}/vote`, { choiceId }).then(res => res.data),
+  vote: (choiceId) => api.post(`/votes`, { choiceId }).then(res => res.data),
 };
 
 // Choice Services

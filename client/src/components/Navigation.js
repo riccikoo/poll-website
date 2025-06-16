@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
 import Button from './Button';
+import { UserCircleIcon } from '@heroicons/react/24/outline';
 
 const Navigation = () => {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('home');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const menuItems = [
-    { name: 'Home', path: '/dashboard' },
+    { name: 'Home', path: '/home' },
     { name: 'Polls', path: '/polls' },
     { name: 'Create', path: '/create' },
     { name: 'Analytics', path: '/analytics' },
   ];
 
+  const isLoggedIn = !!localStorage.getItem('token');
+
   const handleLogout = () => {
-    // Hapus token dari localStorage
     localStorage.removeItem('token');
-    // Redirect ke halaman login
+    window.location.href = '/login';
+  };
+
+  const handleLogin = () => {
     window.location.href = '/login';
   };
 
@@ -25,7 +30,7 @@ const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center -ml-4">
-            <a href="/dashboard" className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+            <a href="/home" className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
               PollMaster
             </a>
           </div>
@@ -48,28 +53,52 @@ const Navigation = () => {
                 </a>
               ))}
             </div>
-            {/* Logout Button */}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleLogout}
-              className="ml-4 -mr-4 flex items-center"
-            >
-              <svg
-                className="w-4 h-4 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            {/* Login/Logout Button */}
+            {isLoggedIn ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="ml-4 -mr-4 flex items-center"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </svg>
-              Logout
-            </Button>
+                <svg
+                  className="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+                Logout
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogin}
+                className="ml-4 -mr-4 flex items-center"
+              >
+                <svg
+                  className="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 12h14M12 5l7 7-7 7"
+                  />
+                </svg>
+                Login
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -114,26 +143,48 @@ const Navigation = () => {
                 {item.name}
               </a>
             ))}
-            {/* Mobile Logout Button */}
-            <button
-              onClick={handleLogout}
-              className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 flex items-center"
-            >
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            {/* Mobile Login/Logout Button */}
+            {isLoggedIn ? (
+              <button
+                onClick={handleLogout}
+                className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 flex items-center"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </svg>
-              Logout
-            </button>
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+                Logout
+              </button>
+            ) : (
+              <button
+                onClick={handleLogin}
+                className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 flex items-center"
+              >
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 12h14M12 5l7 7-7 7"
+                  />
+                </svg>
+                Login
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -141,4 +192,4 @@ const Navigation = () => {
   );
 };
 
-export default Navigation; 
+export default Navigation;

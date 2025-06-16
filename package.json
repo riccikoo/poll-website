@@ -17,10 +17,15 @@
     "@heroicons/react": "^2.2.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
+    "d3-shape": "^3.2.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-gauge-chart": "^0.5.1",
+    "recharts": "^2.15.3",
     "sequelize": "^6.37.7"
   },
   "devDependencies": {

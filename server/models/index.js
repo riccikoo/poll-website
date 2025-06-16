@@ -1,26 +1,30 @@
+const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
-const User = require("./user.model");
-const Poll = require("./poll.model");
-const Choice = require("./choice.model");
-const Vote = require("./vote.model");
+const User = require('./user.model');
+const Poll = require('./poll.model');
+const Choice = require('./choice.model');
+const Vote = require('./vote.model');
 
-// Relasi
-User.hasMany(Poll, { foreignKey: 'UserId', onDelete: 'SET NULL' });
+const ChoiceModel = sequelize.define("Choice", {
+  text: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: "choice_text", // mapping ke kolom choice_text di DB
+  },
+}, {
+  timestamps: true,
+});
+
+User.hasMany(Poll, { foreignKey: 'UserId' });
 Poll.belongsTo(User, { foreignKey: 'UserId' });
 
-Poll.hasMany(Choice, { foreignKey: 'PollId', onDelete: 'CASCADE' });
+Poll.hasMany(Choice, { foreignKey: 'PollId' });
 Choice.belongsTo(Poll, { foreignKey: 'PollId' });
 
-Choice.hasMany(Vote, { foreignKey: 'ChoiceId', onDelete: 'CASCADE' });
+Choice.hasMany(Vote, { foreignKey: 'ChoiceId' });
 Vote.belongsTo(Choice, { foreignKey: 'ChoiceId' });
 
-User.hasMany(Vote, { foreignKey: 'UserId', onDelete: 'CASCADE' });
+User.hasMany(Vote, { foreignKey: 'UserId' });
 Vote.belongsTo(User, { foreignKey: 'UserId' });
 
-module.exports = {
-  sequelize,
-  User,
-  Poll,
-  Choice,
-  Vote,
-};
+module.exports = { User, Poll, Choice, Vote, sequelize };

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Navigation from '../Navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import { Toaster } from 'react-hot-toast';
+import Card, { CardTitle, CardContent } from '../../components/Card';
 
 const Layout = ({ children }) => {
   const { user } = useAuth();
